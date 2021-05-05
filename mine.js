@@ -48,26 +48,6 @@ class Game {
             for(let j=0; j<this.y; j++) {
                 if(this.board[i][j] !== 0)
                     continue;
-
-                /*let num = 0;
-
-                if(this.access_board(i - 1, j - 1) === 9)
-                    num++;
-                if(this.access_board(i - 1, j) === 9)
-                    num++;
-                if(this.access_board(i - 1, j + 1) === 9)
-                    num++;
-                if(this.access_board(i, j - 1) === 9)
-                    num++;
-                if(this.access_board(i, j + 1) === 9)
-                    num++;
-                if(this.access_board(i + 1, j - 1) === 9)
-                    num++;
-                if(this.access_board(i + 1, j) === 9)
-                    num++;
-                if(this.access_board(i + 1, j + 1) === 9)
-                    num++;*/
-
                 this.board[i][j] = this.count_nearby(this.board, i, j, 9);
             }
         }
@@ -133,16 +113,36 @@ class Game {
 
         return count;
     }
+    check_win() {
+        for(let i=0; i<this.x; i++) {
+            for(let j=0; j<this.y; j++) {
+                //if(!this.reveal_board[i][j])
+                //    return false;
+                if(this.display_board[i][j] === '_' || this.display_board[i][j] === '?')
+                    if(this.board[i][j] === 9)
+                        return false;
+            }
+        }
+        return true;
+    }
 
     reveal(x, y) {
-        if(this.game_over)
+        console.log('win:', this.check_win());
+        this.draw_board(this.reveal_board);
+        if(this.check_win()) {
+            alert('win');
             return;
+        }
+        if(this.game_over) {
+            alert('game over');
+            return;
+        }
         let val = this.access_board(x, y);
         if(val === -1)
             return;
+        this.reveal_board[x][y] = true;
         if (this.flag_board[x][y])
             return;
-        this.reveal_board[x][y] = true;
 
         if(val === 9) {
             this.display_board[x][y] = '*';
@@ -309,7 +309,7 @@ let output = 'html';
 
 
 if(output === 'html') {
-    if(debug === 1)
+    if(debug === 0)
         console.log = () => {}
     let game = new Game(10, 10, 10);
     game.generate_html_table('tbody_1')
