@@ -313,16 +313,14 @@ let output = 'html';
 if(output === 'html') {
     if(debug === 0)
         console.log = () => {}
+
     let game = new Game(10, 10, 10);
     game.generate_html_table('tbody_1')
-    if(debug) {
-        game.generate_html_table('tbody_2')
-    }
+
 
     document.getElementById('new_game').onclick = () => {
         game = new Game(10, 10, 10);
-        game.generate_html_table('tbody_1')
+        game.generate_html_table('tbody_1');
+        game.redraw_html_board();
     }
-
-
 }
