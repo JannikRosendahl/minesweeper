@@ -114,25 +114,27 @@ class Game {
         return count;
     }
     check_win() {
+        if(this.game_over)
+            return;
+        console.log('check_win()');
         for(let i=0; i<this.x; i++) {
             for(let j=0; j<this.y; j++) {
-                //if(!this.reveal_board[i][j])
-                //    return false;
-                if(this.display_board[i][j] === '_' || this.display_board[i][j] === '?')
-                    if(this.board[i][j] === 9)
-                        return false;
+                if(!this.reveal_board[i][j])
+                    return false;
+                //if(this.display_board[i][j] === '_' || this.display_board[i][j] === '?')
+                //    if(this.board[i][j] === 9)
+                //        return false;
             }
         }
+        alert('win');
+        this.game_over = true;
         return true;
     }
 
     reveal(x, y) {
         console.log('win:', this.check_win());
-        this.draw_board(this.reveal_board);
-        if(this.check_win()) {
-            alert('win');
-            return;
-        }
+        //this.draw_board(this.reveal_board);
+
         if(this.game_over) {
             alert('game over');
             return;
@@ -224,6 +226,9 @@ class Game {
                 node.y_val = i;
                 node.onclick = () => {
                     this.update_html_table(j, i, 'reveal');
+                    this.check_win();
+                    if(this.game_over)
+                        this.redraw_html_board();
                 }
                 node.oncontextmenu = () => {
                     this.update_html_table(j, i, 'flag');
@@ -242,8 +247,6 @@ class Game {
             case 'reveal':
                 this.reveal(x, y);
                 this.redraw_html_board();
-
-
                 break;
             case 'flag':
                 if(!(this.display_board[x][y] === '_' || this.display_board[x][y] === '?'))
@@ -298,12 +301,11 @@ class Game {
                 return 'resources/bomb_crossed.bmp'
         }
     }
-
 }
 
 
 
-let debug = 0;
+let debug = 1;
 //let output = 'nodejs';
 let output = 'html';
 
@@ -313,6 +315,9 @@ if(output === 'html') {
         console.log = () => {}
     let game = new Game(10, 10, 10);
     game.generate_html_table('tbody_1')
+    if(debug) {
+        game.generate_html_table('tbody_2')
+    }
 
     document.getElementById('new_game').onclick = () => {
         game = new Game(10, 10, 10);
