@@ -17,6 +17,8 @@ class Game {
     y;
     mine_count;
 
+    flag_count;
+
     board;
     display_board;
     flag_board;
@@ -28,6 +30,7 @@ class Game {
         this.x = x;
         this.y = y;
         this.mine_count = mine_count;
+        this.flag_count = 0;
 
         this.board = this.create_init_board(0);
         this.display_board = this.create_init_board('_');
@@ -319,7 +322,23 @@ if(output === 'html') {
 
 
     document.getElementById('new_game').onclick = () => {
-        game = new Game(10, 10, 10);
+        let x = Number.parseInt(document.getElementById('x_in').value);
+        let y = Number.parseInt(document.getElementById('y_in').value);
+        let m = Number.parseInt(document.getElementById('mines_in').value);
+
+        console.log(x);
+        console.log(y);
+        console.log(m);
+
+        if(isNaN(x))
+            x = 10;
+        if(isNaN(y))
+            y = 10;
+        if(isNaN(m))
+            m = 10;
+
+
+        game = new Game(x, y, m);
         game.generate_html_table('tbody_1');
         game.redraw_html_board();
     }
